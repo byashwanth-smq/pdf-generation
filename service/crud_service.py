@@ -1,3 +1,5 @@
+import sys
+sys.path.append("/Users/Yashwanth.B/Library/CloudStorage/OneDrive-CPGPLC/projects/python/pdf-generator")
 from db.handler import AlloyDBHandler
 
 class CRUDService:
