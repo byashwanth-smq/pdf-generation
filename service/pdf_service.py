@@ -97,15 +97,6 @@ class PdfService:
         question_mappings = self.process_mapping_data(question_list, "question_id", "answer_options")
         return question_list, question_mappings
     
-    # def get_all_checkpoint(self, checkpoint_response_list):
-    #     checkpoint_list = []
-    #     self._ensure_connection()
-    #     for checkpoint_response in checkpoint_response_list:
-    #         checkpoint_col = self.get_checkpoint(checkpoint_response['checkpoint_id'])
-    #         if checkpoint_col:
-    #             for checkpoint in checkpoint_col:
-    #                 checkpoint_list.append(checkpoint)
-    #     return checkpoint_list
             
     def get_response(self, checkpoint_response_id):
         self._ensure_connection()
@@ -182,8 +173,8 @@ if __name__ == '__main__':
     dict = {}
     service = PdfService()
     site_uuid = '00000000-0000-4000-8122-000000000001'
-    start_date = ''
-    end_date = ''
+    start_date = '' #todo
+    end_date = '' #todo
     try:
         [[site_id, site_code, site_name]] = service.get_site_details(site_uuid)
         dict["Site Name"] = site_name
@@ -196,7 +187,6 @@ if __name__ == '__main__':
         # checkpoint_list, checkpoint_mappings = service.get_checkpoint()
         service.get_cafe_area_association(dict, area_mapping)
         service.construct_json_checkpoint_response(dict)
-        # print('---checkpoint_mappings---.', checkpoint_mappings)
         print('dict---', json.dumps(dict))
     except Exception as e:
         print('Error:', e)
