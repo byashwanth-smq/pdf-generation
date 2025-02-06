@@ -7,5 +7,6 @@ class TABLES(Enum):
     CHECKPOINT = "checkpoint"
     QUESTION = "question"
     RESPONSE = "response"
+    USERS = 'users'
     AREA = 'area'
     AREA_CAFE_ASSOCIATION = 'area_cafe_association'

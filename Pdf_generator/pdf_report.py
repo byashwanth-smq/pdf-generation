@@ -99,23 +99,24 @@ if __name__ == "__main__":
                             {
                                 "Area name": "Receiving & Stores",
                                 "checkpoint_responses": [
-                            {
-                            "code":"5",
-                            "checkpoint_response_details": {
-                                "General_Cleaning_name": "Vegetables/ Fruits Disinfection Treatment",
-                                "Receiving_text": "HSEQ-FS/F/SOP -4 &5",
-                                "submitted_on": "14-Jan-2025 07:53:45PM",
-                                "submitted_by": "AJITHA NEELAVARN"
-                            },
-                            "headers": [
-                                            "question",
-                                            "response",
-                                            "comment",
-                                            "action_taken",
-                                            "image"
-                                        ],
-                            "response details": [
-                                            {
+                                {
+                                "code":"5",
+                                "checkpoint_response_details": {
+                                     
+                                    "General_Cleaning_name": "Vegetables/ Fruits Disinfection Treatment",
+                                    "Receiving_text": "HSEQ-FS/F/SOP -4 &5",
+                                    "submitted_on": "14-Jan-2025 07:53:45PM",
+                                    "submitted_by": "AJITHA NEELAVARN"
+                                },
+                                "headers": [
+                                                "question",
+                                                "response",
+                                                "comment",
+                                                "action_taken",
+                                                "image"
+                                            ],
+                                "response details": [
+                                                {
                                             "question": "Common touchpoints are disinfected?",
                                             "response": "Yes",
                                             "comment": "",
@@ -629,9 +630,9 @@ if __name__ == "__main__":
                                 }
                             ]
                             },
-                               {
-                            "code":"4",
+                            {
                             "checkpoint_response_details": {
+                                "code":"4",
                                 "General_Cleaning_name": "tables/ Fruits Disinfection Treatment",
                                 "Receiving_text": "HSEQ-FS/F/SOP -4 &5",
                                 "submitted_on": "14-Jan-2025 08:15:30PM",

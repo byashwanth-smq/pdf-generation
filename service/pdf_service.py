@@ -27,6 +27,23 @@ class PdfService:
         for item in data:
             mapping[item[key_field]] = item[value_field]
         return mapping
+    
+    def process_mapping_checkpoint(self, data, key_field: str):
+        """Process mapping data into a dictionary.
+        
+        Args:
+            data: List of dictionaries containing mapping data
+            key_field: Field name to use as dictionary key
+            value_field: Field name to use as dictionary value
+        """
+        mapping = {}
+        for item in data:
+            mapping[item[key_field]] = {
+                "General_Cleaning_name": item["checkpoint_name"],
+                "code": item["checkpoint_code"],
+                "Receiving_text": item['document_id'],
+            }
+        return mapping
 
     def get_areas(self):
         self._ensure_connection()
@@ -48,7 +65,7 @@ class PdfService:
         self._ensure_connection()
         query = f"""
             SELECT row_to_json(t) 
-            FROM (SELECT cafe_id, cafe_name FROM {TABLES.CAFE_INFO.value} WHERE site_id = '{site_id}') t;
+            FROM (SELECT cafe_id, cafe_name as Cafeteria_Name FROM {TABLES.CAFE_INFO.value} WHERE site_id = '{site_id}') t;
         """
         cafe_info_ids_array = self.db_handler.fetch_all_data(query)
         return [cafe_data for [cafe_data] in cafe_info_ids_array] # destructure into flat array
@@ -59,9 +76,9 @@ class PdfService:
             f"""
             SELECT row_to_json(t)
             FROM (
-                SELECT checkpoint_response_id, checkpoint_id
+                SELECT checkpoint_response_id, checkpoint_id, submitted_by, submitted_on
                 FROM {TABLES.CHECKPOINT_RESPONSE.value}
-                WHERE cafe_id = '{cafe_id}' and area_id = '{area_id}' 
+                WHERE cafe_id = '{cafe_id}' and area_id = '{area_id}' and submitted = true 
             ) t;
             """ 
         ) or [] #  and createdon = date # 1 day and submitted = true
@@ -79,11 +96,11 @@ class PdfService:
         self._ensure_connection()
         query = f"""
             SELECT row_to_json(t) 
-            FROM (SELECT checkpoint_id, checkpoint_name FROM {TABLES.CHECKPOINT.value}) t;
+            FROM (SELECT checkpoint_id, checkpoint_name, checkpoint_code, document_id FROM {TABLES.CHECKPOINT.value}) t;
         """
         checkpoint_data = self.db_handler.fetch_all_data(query)
         checkpoint_list = [checkpoint for [checkpoint] in checkpoint_data]
-        checkpoint_mappings = self.process_mapping_data(checkpoint_list, "checkpoint_id", "checkpoint_name")
+        checkpoint_mappings = self.process_mapping_checkpoint(checkpoint_list, "checkpoint_id")
         return checkpoint_list, checkpoint_mappings
     
     def get_questions(self):
@@ -97,12 +114,23 @@ class PdfService:
         question_mappings = self.process_mapping_data(question_list, "question_id", "answer_options")
         return question_list, question_mappings
     
+    def get_users(self):
+        self._ensure_connection()
+        query = f"""
+            SELECT row_to_json(t) 
+            FROM (SELECT user_id, fullname FROM {TABLES.USERS.value}) t;
+        """
+        users_data = self.db_handler.fetch_all_data(query)
+        users_list = [question for [question] in users_data]
+        users_mappings = self.process_mapping_data(users_list, "user_id", "fullname")
+        return users_list, users_mappings
+    
             
     def get_response(self, checkpoint_response_id):
         self._ensure_connection()
         query = f"""
             SELECT row_to_json(t) 
-            FROM (SELECT response_id, question_description, selected_answer FROM {TABLES.RESPONSE.value} WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
+            FROM (SELECT response_id, question_description, selected_answer, comment, action_taken FROM {TABLES.RESPONSE.value} WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
         """
         return self.db_handler.fetch_all_data(query)
 
@@ -110,17 +138,32 @@ class PdfService:
         response_list = []
         self._ensure_connection()
         checkpoint_list, checkpoint_mappings = service.get_checkpoint()
+        users_list, users_mappings = self.get_users()
         # question_list, question_mappings = service.get_questions()
         for checkpoint_response in checkpoint_response_list:
             response_col = self.get_response(checkpoint_response['checkpoint_response_id'])
+            if checkpoint_response['submitted_by'] not in users_mappings:
+                submitted_by = ""
+            else:
+                submitted_by = users_mappings[checkpoint_response['submitted_by']]
+            
+            submitted_on = checkpoint_response['submitted_on']
+            del checkpoint_response['submitted_by']
+            del checkpoint_response['submitted_on']
             if checkpoint_response['checkpoint_id'] not in checkpoint_mappings:
-                checkpoint_response['checkpoint_name'] = ''
+                checkpoint_response['checkpoint_response_details'] = ''
             else :
-                checkpoint_response['checkpoint_name'] = checkpoint_mappings[checkpoint_response['checkpoint_id']]
-            if response_col:                
+                checkpoint_response['checkpoint_response_details'] = {**checkpoint_mappings[checkpoint_response['checkpoint_id']], "submitted_by": submitted_by, "submitted_on": submitted_on}
+            if response_col:
                 for [response] in response_col:
-                    
-                    response_list.append({"response_id":response['response_id'], "question": response['question_description'], "answer": response['selected_answer']})
+                    response_list.append({ "question": response['question_description'], "response": response['selected_answer'], "comment": response["comment"], "action_taken": response['action_taken'], "image":"" })
+
+            if len(response_list):
+                headers = list(response_list[0].keys())
+                checkpoint_response['headers']  = headers[1:]
+            else:
+                checkpoint_response['headers']  =  response_list
+            
             checkpoint_response['response_details'] = response_list
         
     def get_area(self, area_id):
@@ -151,7 +194,7 @@ class PdfService:
                 for area in area_set:
                     area_dict = {
                         'area_id': area,
-                        'name':  area_mapping[area]
+                        'area_name':  area_mapping[area]
                     }
                     temp_area_list.append(area_dict)
             cafe['Areas'] = temp_area_list
@@ -166,19 +209,21 @@ class PdfService:
                 area_id = area['area_id']                
                 checkpoint_response = self.get_checkpoint_response(cafe_id=cafe_id, area_id=area_id)
                 checkpoint_response_col = [item[0] for item in checkpoint_response]
-                area['checkpoint_response_details'] = checkpoint_response_col
+                area['checkpoint_response'] = checkpoint_response_col
                 self.get_all_responses(checkpoint_response_col)
 
 if __name__ == '__main__':
     dict = {}
     service = PdfService()
     site_uuid = '00000000-0000-4000-8122-000000000001'
-    start_date = None #todo
-    end_date = None #todo
+    service.start_date = '2024-11-11' #todo
+    service.end_date = '2024-11-11' #todo
     try:
         [[site_id, site_code, site_name]] = service.get_site_details(site_uuid)
         dict["Site Name"] = site_name
         dict["Site Id"] = site_code
+        dict["Report Date"] = ""
+        dict["Verified By"] = ""
         cafe_list = service.get_cafeinfo(site_id)
         dict['cafes'] = cafe_list
         

@@ -24,7 +24,7 @@ class TableGenerator:
             "11": [50, 30, 50, 50, 60, 60, 50, 50, 50,50,40]
         }
         
-        table_code = table_data["code"]
+        table_code = table_data["checkpoint_response_details"]["code"]
         column_widths = table_column_widths[table_code]
 
 
