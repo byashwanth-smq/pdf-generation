@@ -173,8 +173,8 @@ if __name__ == '__main__':
     dict = {}
     service = PdfService()
     site_uuid = '00000000-0000-4000-8122-000000000001'
-    start_date = '' #todo
-    end_date = '' #todo
+    start_date = None #todo
+    end_date = None #todo
     try:
         [[site_id, site_code, site_name]] = service.get_site_details(site_uuid)
         dict["Site Name"] = site_name
