@@ -1,5 +1,6 @@
 import json
 import sys
+from datetime import datetime
 sys.path.append("/Users/Yashwanth.B/Library/CloudStorage/OneDrive-CPGPLC/projects/python/pdf-generator")
 from db.handler import AlloyDBHandler
 from db.tables import TABLES
@@ -72,6 +73,8 @@ class PdfService:
 
     def get_checkpoint_response(self, cafe_id, area_id):
         self._ensure_connection()
+        start_date = f"{self.date}T00:00:00"
+        end_date = f"{self.date}T23:59:59"
         return self.db_handler.fetch_all_data(
             f"""
             SELECT row_to_json(t)
@@ -81,7 +84,7 @@ class PdfService:
                WHERE cafe_id = '{cafe_id}' 
                 AND area_id = '{area_id}' 
                 AND submitted = true
-                -- AND created_on >= '{self.date}' AND  created_on <= '{self.date}'
+                AND created_on >= '{start_date}' AND  created_on <= '{end_date}'
             ) t;
             """ 
         ) or []
@@ -152,6 +155,7 @@ class PdfService:
                 submitted_by = users_mappings[checkpoint_response['submitted_by']]
             
             checkpoint_response['submitted_by'] = submitted_by
+            checkpoint_response['submitted_on'] = " " if checkpoint_response['submitted_on'] == None else str(datetime.fromisoformat(checkpoint_response['submitted_on']).date())
 
             if checkpoint_response['checkpoint_id'] not in checkpoint_mappings:
                 checkpoint_response['checkpoint_response_details'] = ''
