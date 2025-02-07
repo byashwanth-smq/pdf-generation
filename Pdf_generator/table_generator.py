@@ -71,7 +71,7 @@ class TableGenerator:
         self.pdf.line(30, header_y_position - 5, self.page_width - 30, header_y_position - 5)
         y_position = header_y_position - 20
 
-        for response_id, row in table_data["response details"].items():  # Iterate through responses using .items()
+        for response_id, row in table_data["response_details"].items():  # Iterate through responses using .items()
             max_lines = 1
             row_y_position = y_position
 
