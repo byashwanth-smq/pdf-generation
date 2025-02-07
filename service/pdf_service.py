@@ -65,10 +65,10 @@ class PdfService:
         self._ensure_connection()
         query = f"""
             SELECT row_to_json(t) 
-            FROM (SELECT cafe_id, cafe_name as Cafeteria_Name FROM {TABLES.CAFE_INFO.value} WHERE site_id = '{site_id}') t;
+            FROM (SELECT cafe_id, cafe_name as Cafeteria_Name, cafe_code FROM {TABLES.CAFE_INFO.value} WHERE site_id = '{site_id}') t;
         """
-        cafe_info_ids_array = self.db_handler.fetch_all_data(query)
-        return [cafe_data for [cafe_data] in cafe_info_ids_array] # destructure into flat array
+        cafe_info_ids_array = self.db_handler.fetch_all_data(query) # 
+        return {cafe_data["cafe_code"]: cafe_data for [cafe_data] in cafe_info_ids_array} # destructure into flat array
 
     def get_checkpoint_response(self, cafe_id, area_id):
         self._ensure_connection()
@@ -130,17 +130,17 @@ class PdfService:
         self._ensure_connection()
         query = f"""
             SELECT row_to_json(t) 
-            FROM (SELECT response_id, question_description, selected_answer, comment, action_taken FROM {TABLES.RESPONSE.value} WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
+            FROM (SELECT action_taken, quantity, comment, dynamic_question, response_id, question_description, question_type, sanitizer_concentration, selected_answer, unit  FROM {TABLES.RESPONSE.value} WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
         """
         return self.db_handler.fetch_all_data(query)
 
     def get_all_responses(self, checkpoint_response_list):
-        response_list = []
+        response_list = {}
         self._ensure_connection()
         checkpoint_list, checkpoint_mappings = service.get_checkpoint()
         users_list, users_mappings = self.get_users()
         # question_list, question_mappings = service.get_questions()
-        for checkpoint_response in checkpoint_response_list:
+        for checkpoint_response in checkpoint_response_list.values():
             response_col = self.get_response(checkpoint_response['checkpoint_response_id'])
             if checkpoint_response['submitted_by'] not in users_mappings:
                 submitted_by = ""
@@ -156,13 +156,18 @@ class PdfService:
                 checkpoint_response['checkpoint_response_details'] = {**checkpoint_mappings[checkpoint_response['checkpoint_id']], "submitted_by": submitted_by, "submitted_on": submitted_on}
             if response_col:
                 for [response] in response_col:
-                    response_list.append({ "question": response['question_description'], "response": response['selected_answer'], "comment": response["comment"], "action_taken": response['action_taken'], "image":"" })
+                    response_list[response['response_id']] = {
+                         "Quantity": response["quantity"],
+                         "response": response['selected_answer'], 
+                         "Sanitizer Concentration": response["sanitizer_concentration"],
+                         "MOG-Name":response["dynamic_question"],
+                         "question": response['question_description'], 
+                         "comment": response["comment"], 
+                         "action_taken": response['action_taken'], 
+                         "image": None,
+                         "unit": response['unit'],
+                    }
 
-            if len(response_list):
-                headers = list(response_list[0].keys())
-                checkpoint_response['headers']  = headers[1:]
-            else:
-                checkpoint_response['headers']  =  response_list
             
             checkpoint_response['response_details'] = response_list
         
@@ -185,31 +190,27 @@ class PdfService:
         return self.db_handler.fetch_all_data(f"SELECT area_id  FROM {TABLES.AREA_CAFE_ASSOCIATION.value} WHERE cafe_id = '{cafe_id}';")
 
     def get_cafe_area_association(self, dict, area_mapping):
-        cafe_list = dict['cafes']
-        for cafe in cafe_list:
+        cafe_dict = dict['cafes']
+        for cafe in cafe_dict.values():
             area_list = self.get_area_cafe_association(cafe['cafe_id'])
-            temp_area_list = []
+            area_dict = {}
             if area_list:
                 area_set = set(area[0] for area in area_list)
                 for area in area_set:
-                    area_dict = {
-                        'area_id': area,
-                        'area_name':  area_mapping[area]
-                    }
-                    temp_area_list.append(area_dict)
-            cafe['Areas'] = temp_area_list
+                    area_dict[area_mapping[area]] = {'area_id': area}
+            cafe['Areas'] = area_dict
         return dict
 
     def construct_json_checkpoint_response(self, dict):
         cafes = dict['cafes']
-        for cafe in cafes:
+        for cafe in cafes.values():
             areas = cafe['Areas']
-            for area in areas:
+            for area in areas.values():
                 cafe_id = cafe['cafe_id']
-                area_id = area['area_id']                
-                checkpoint_response = self.get_checkpoint_response(cafe_id=cafe_id, area_id=area_id)
-                checkpoint_response_col = [item[0] for item in checkpoint_response]
-                area['checkpoint_response'] = checkpoint_response_col
+                area_id = area['area_id']
+                checkpoint_response_data = self.get_checkpoint_response(cafe_id=cafe_id, area_id=area_id)
+                checkpoint_response_col = {checkpoint_response['checkpoint_response_id']: checkpoint_response for [checkpoint_response] in checkpoint_response_data}
+                area.update(checkpoint_response_col)
                 self.get_all_responses(checkpoint_response_col)
 
 if __name__ == '__main__':
@@ -229,7 +230,7 @@ if __name__ == '__main__':
         
         area_list, area_mapping = service.get_areas()
 
-        # checkpoint_list, checkpoint_mappings = service.get_checkpoint()
+        checkpoint_list, checkpoint_mappings = service.get_checkpoint()
         service.get_cafe_area_association(dict, area_mapping)
         service.construct_json_checkpoint_response(dict)
         print('dict---', json.dumps(dict))
