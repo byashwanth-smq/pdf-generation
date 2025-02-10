@@ -130,7 +130,7 @@ class PdfService:
         self._ensure_connection()
         start_date = f"{self.date}T00:00:00"
         end_date = f"{self.date}T23:59:59"
-        return self.db_handler.fetch_all_data(
+        return self.db_handler.fetch_all_data( #todo - skipped uncomment it
             f"""
             SELECT row_to_json(t)
             FROM (
@@ -140,7 +140,7 @@ class PdfService:
                 AND area_id = '{area_id}' 
                 AND submitted = true
                 AND created_on >= '{start_date}' AND created_on <= '{end_date}'
-                AND skipped = false
+                -- AND skipped = false 
             ) t;
             """
         ) or []
@@ -233,28 +233,28 @@ class PdfService:
             
             # Process responses
             for [response] in response_data:
-                response_list[response['response_id']] = {
+                response_list[response['response_id']] = { #todo - getting issue commented it
                     "Dish name" : response['dynamic_question'],
                     "Quantity": response["quantity"],
-                    "Product temperature": response['product_temp'],
+                    # "Product temperature": response['product_temp'] if response['product_temp'] else "",
                     "Response": response['selected_answer'],
                     "Sanitizer Concentration": response["sanitizer_concentration"],
-                    "Start temp": response['start_temp'] if response['start_temp'] else response['selected_answer'],
-                    "Not in service": response['not_in_service'],
+                    # "Start temp": response['start_temp'] if response['start_temp'] else response['selected_answer'],
+                    # "Not in service": response['not_in_service'],
                     "MOG-Name":response["dynamic_question"],
                     "Sub-Checkpoint": response['question_description'],
                     "Comment": response["comment"],
-                    "Category": response['category'],
+                    # "Category": response['category'],
                     "Action_taken": response['action_taken'],
                     "Image": None,
                     "Unit": response['unit'],
                     "Equipment Temperature°C": response['selected_answer'],
-                    "Duration": response['minutes'],
-                    "Start time / end time": response['start_time'] + ' ' + response['end_time'] ,
-                    "End temp": response['product_temp'] if response['product_temp'] else response['end_temp_or_storage_temp'],
-                    "After 90 min": response['end_temp_or_storage_temp'],
-                    "Reheating Temp (°C)": response['end_temp_or_storage_temp'],
-                    "Cooking Completion Temp (°C)": response['start_temp'] if response['start_temp'] else response['selected_answer']
+                    # "Duration": response['minutes'],
+                    # "Start time / end time": response['start_time'] + ' ' + response['end_time'] ,
+                    # "End temp": response['product_temp'] if response['product_temp'] else response['end_temp_or_storage_temp'],
+                    # "After 90 min": response['end_temp_or_storage_temp'],
+                    # "Reheating Temp (°C)": response['end_temp_or_storage_temp'],
+                    # "Cooking Completion Temp (°C)": response['start_temp'] if response['start_temp'] else response['selected_answer']
                 }
             
             checkpoint_response['response_details'] = response_list
@@ -313,12 +313,10 @@ class PdfService:
             
             for area_name, area in cafe['Areas'].items():
                 processed_area = dict(area)
-                
                 checkpoint_response_data = self.get_checkpoint_response(
                     cafe_id=cafe['cafe_id'],
                     area_id=area['area_id']
                 )
-                
                 checkpoint_response_col = {checkpoint_response['checkpoint_response_id']: checkpoint_response for [checkpoint_response] in checkpoint_response_data}
                 
                 if 'area_id' in processed_area:
@@ -378,7 +376,7 @@ class PdfService:
 def main():
     """Main function to generate PDF data."""
     site_uuid = '00000000-0000-4000-8122-000000000001'
-    date = '2024-11-11'
+    date = '2024-08-27'
     
     service = PdfService(date)
     
