@@ -234,15 +234,27 @@ class PdfService:
             # Process responses
             for [response] in response_data:
                 response_list[response['response_id']] = {
+                    "Dish name" : response['dynamic_question'],
                     "Quantity": response["quantity"],
+                    "Product temperature": response['product_temp'],
                     "Response": response['selected_answer'],
                     "Sanitizer Concentration": response["sanitizer_concentration"],
+                    "Start temp": response['start_temp'] if response['start_temp'] else response['selected_answer'],
+                    "Not in service": response['not_in_service'],
                     "MOG-Name":response["dynamic_question"],
                     "Sub-Checkpoint": response['question_description'],
                     "Comment": response["comment"],
+                    "Category": response['category'],
                     "Action_taken": response['action_taken'],
                     "Image": None,
                     "Unit": response['unit'],
+                    "Equipment Temperature°C": response['selected_answer'],
+                    "Duration": response['minutes'],
+                    "Start time / end time": response['start_time'] + ' ' + response['end_time'] ,
+                    "End temp": response['product_temp'] if response['product_temp'] else response['end_temp_or_storage_temp'],
+                    "After 90 min": response['end_temp_or_storage_temp'],
+                    "Reheating Temp (°C)": response['end_temp_or_storage_temp'],
+                    "Cooking Completion Temp (°C)": response['start_temp'] if response['start_temp'] else response['selected_answer']
                 }
             
             checkpoint_response['response_details'] = response_list
