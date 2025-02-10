@@ -9,9 +9,21 @@
             "cafeteria_name": "Intel",
             "cafe_code": "106X",
             "Areas": {
-                "Staff Grooming": {},
-                "Service": {},
-                "Pantry": {},
+                "Staff Grooming": {
+                    "response_details": {}
+                },
+                "Pest Sighting": {
+                    "response_details": {}
+                },
+                "Service": {
+                    "response_details": {}
+                },
+                "Healthcare": {
+                    "response_details": {}
+                },
+                "Pantry": {
+                    "response_details": {}
+                },
                 "Kitchen": {
                     "00000000-0000-4000-80d4-00001d8b32d9": {
                         "checkpoint_response_id": "00000000-0000-4000-80d4-00001d8b32d9",
@@ -19,7 +31,7 @@
                         "submitted_by": " ",
                         "submitted_on": " ",
                         "General_Cleaning_name": "General Cleaning - Kitchen",
-                        "code": 10,
+                        "code": 0,
                         "Receiving_text": "HSEQ-FS/F/SOP-34",
                         "response_details": {
                             "00000000-0000-4000-803a-000000534700": {
@@ -63,7 +75,7 @@
                         "submitted_by": " ",
                         "submitted_on": " ",
                         "General_Cleaning_name": "Equipment Temperature Record",
-                        "code": 10,
+                        "code": 17,
                         "Receiving_text": "HSEQ-FS/F/SOP -13",
                         "response_details": {
                             "00000000-0000-4000-803a-000000534700": {
@@ -100,12 +112,49 @@
                                 "unit": null
                             }
                         }
+                    },
+                    "response_details": {
+                        "00000000-0000-4000-803a-000000534700": {
+                            "Quantity": 5.0,
+                            "response": null,
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": "Beetroot Rice Premium",
+                            "question": "Is following procedure compliant?",
+                            "comment": "Testing ",
+                            "action_taken": "Testing ",
+                            "image": null,
+                            "unit": "Kgs"
+                        },
+                        "00000000-0000-4000-803a-000000534ad0": {
+                            "Quantity": null,
+                            "response": "Breakfast",
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": null,
+                            "question": "Select Mealtime",
+                            "comment": null,
+                            "action_taken": null,
+                            "image": null,
+                            "unit": null
+                        },
+                        "00000000-0000-4000-803a-000000534c83": {
+                            "Quantity": null,
+                            "response": "Q46y",
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": null,
+                            "question": "Cart no",
+                            "comment": null,
+                            "action_taken": null,
+                            "image": null,
+                            "unit": null
+                        }
                     }
                 },
-                "Food Waste": {},
-                "Dispatch": {},
-                "Healthcare": {},
-                "Pest Sighting": {}
+                "Dispatch": {
+                    "response_details": {}
+                },
+                "Food Waste": {
+                    "response_details": {}
+                }
             }
         },
         "106X_SSR2": {
@@ -113,8 +162,12 @@
             "cafeteria_name": "Intel SRR2",
             "cafe_code": "106X_SSR2",
             "Areas": {
-                "Receiving & Stores": {},
-                "Kitchen": {}
+                "Kitchen": {
+                    "response_details": {}
+                },
+                "Receiving & Stores": {
+                    "response_details": {}
+                }
             }
         },
         "106X_SSR3": {
@@ -122,8 +175,12 @@
             "cafeteria_name": "Intel SRR3",
             "cafe_code": "106X_SSR3",
             "Areas": {
-                "Receiving & Stores": {},
-                "Kitchen": {}
+                "Kitchen": {
+                    "response_details": {}
+                },
+                "Receiving & Stores": {
+                    "response_details": {}
+                }
             }
         },
         "106X_SSRK": {
@@ -131,9 +188,15 @@
             "cafeteria_name": "Intel SRRK",
             "cafe_code": "106X_SSRK",
             "Areas": {
-                "Food Waste": {},
-                "Service": {},
-                "Pantry": {}
+                "Pantry": {
+                    "response_details": {}
+                },
+                "Service": {
+                    "response_details": {}
+                },
+                "Food Waste": {
+                    "response_details": {}
+                }
             }
         },
         "106X_SSR1": {
