@@ -59,7 +59,7 @@ class PdfService:
         """
         return {
             item[key_field]: {
-                "General_Cleaning_name": item["checkpoint_name"],
+                "checkpoint_name": item["checkpoint_name"],
                 "code": item["checkpoint_code"],
                 "Receiving_text": item['document_id']
             }
@@ -333,7 +333,6 @@ class PdfService:
                     checkpoint_mappings,
                     users_mappings
                 )
-                processed_area['response_details'] = response_details
                 
                 processed_areas[area_name] = processed_area
             
