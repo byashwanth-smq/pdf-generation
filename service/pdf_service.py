@@ -204,7 +204,7 @@ class PdfService:
     def process_individual_responses(self, checkpoint_code, response_data: List[Dict]) -> Dict:
         """Processes individual responses and constructs response_dict dynamically."""
         response_list = {}
-        DEFAULT_CHECKPOINT_CODE = 12
+        DEFAULT_CHECKPOINT_CODE = 100
         def extract_time_from_timestamp(timestamp):
             if timestamp:
                 return datetime.fromisoformat(timestamp[:-6]).strftime("%H:%M:%S")
@@ -217,14 +217,13 @@ class PdfService:
         
         for [response] in response_data:
             response_dict = {}
-            if checkpoint_code:
-                if checkpoint_code in checkpoint_code_groups:
-                    table_code = checkpoint_code_groups.get(checkpoint_code) or DEFAULT_CHECKPOINT_CODE
-                    for mapping in table_headers.get(int(table_code)):
-                        for col_name, field_name in mapping.items():
-                            value = response.get(field_name)
-                            response_dict[col_name] = value
-                response_list[response['response_id']] = response_dict
+            checkpoint_code = checkpoint_code if checkpoint_code in checkpoint_code_groups else DEFAULT_CHECKPOINT_CODE
+            table_code = checkpoint_code_groups.get(checkpoint_code)
+            for mapping in table_headers.get(int(table_code)):
+                for col_name, field_name in mapping.items():
+                    value = response.get(field_name)
+                    response_dict[col_name] = value
+            response_list[response['response_id']] = response_dict
         
         return response_list
 
