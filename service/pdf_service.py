@@ -218,12 +218,12 @@ class PdfService:
                 None
         
         for [response] in response_data:
-            response_dict = {}
+            # response_dict = {}
             # Only add fields if they have truthy values
             fields = {
                 "Dish name": response.get('dynamic_question'),
                 "Quantity": response.get("quantity"),
-                "Product temperature": response.get('product_temp') or "",
+                "Product temperature": response.get('product_temp'),
                 "Response": response.get('selected_answer'),
                 "Sanitizer Concentration": response.get("sanitizer_concentration"),
                 "Start temp": response.get('start_temp') or response.get('selected_answer'),
@@ -245,18 +245,18 @@ class PdfService:
             }
             
             # Only include non-empty values in the response_dict
-            response_dict = {key: value for key, value in fields.items() if value}
+            # response_dict = {key: value for key, value in fields.items() if value}
             
-            response_list[response['response_id']] = response_dict
+            response_list[response['response_id']] = fields
         
         return response_list
 
 
     def process_responses(self, checkpoint_response_list: Dict, checkpoint_mappings: Dict, users_mappings: Dict) -> Dict:
         """Process all responses for checkpoint responses."""
-        response_list = {}
         
         for checkpoint_response in checkpoint_response_list.values():
+            response_list = {}
             response_data = self.get_response(checkpoint_response['checkpoint_response_id'])
             
             # Process submitted by
@@ -281,7 +281,6 @@ class PdfService:
             response_list.update(response_dict)
             checkpoint_response['response_details'] = response_list
         
-        return response_list
 
     def get_area_cafe_association(self, cafe_id: str) -> List:
         """Fetch area-cafe associations.
