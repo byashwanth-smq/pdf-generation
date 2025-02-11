@@ -5,7 +5,7 @@ import copy
 from datetime import datetime
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
-
+from config_pdf_service import checkpoint_code_groups, table_headers
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))    
 __package__ = 'db'
 
@@ -139,8 +139,8 @@ class PdfService:
                 WHERE cafe_id = '{cafe_id}' 
                 AND area_id = '{area_id}' 
                 AND submitted = true
-                -- AND created_on >= '{start_date}' AND created_on <= '{end_date}'
-                -- AND skipped = false 
+                AND created_on >= '{start_date}' AND created_on <= '{end_date}'
+                AND skipped = false 
             ) t;
             """
         ) or []
@@ -200,13 +200,11 @@ class PdfService:
                   WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
         """
         return self.db_handler.fetch_all_data(query)
-    
 
-
-    def process_individual_responses(self, response_data: List[Dict]) -> Dict:
+    def process_individual_responses(self, checkpoint_code, response_data: List[Dict]) -> Dict:
         """Processes individual responses and constructs response_dict dynamically."""
         response_list = {}
-
+        DEFAULT_CHECKPOINT_CODE = 12
         def extract_time_from_timestamp(timestamp):
             if timestamp:
                 return datetime.fromisoformat(timestamp[:-6]).strftime("%H:%M:%S")
@@ -218,36 +216,15 @@ class PdfService:
                 None
         
         for [response] in response_data:
-            # response_dict = {}
-            # Only add fields if they have truthy values
-            fields = {
-                "Dish name": response.get('dynamic_question'),
-                "Quantity": response.get("quantity"),
-                "Product temperature": response.get('product_temp'),
-                "Response": response.get('selected_answer'),
-                "Sanitizer Concentration": response.get("sanitizer_concentration"),
-                "Start temp": response.get('start_temp') or response.get('selected_answer'),
-                "Not in service": response.get('not_in_service'),
-                "MOG-Name": response.get("dynamic_question"),
-                "Sub-Checkpoint": response.get('question_description'),
-                "Comment": response.get("comment"),
-                "Category": response.get('category'),
-                "Action_taken": response.get('action_taken'),
-                "Image": None,
-                "Unit": response.get('unit'),
-                "Equipment Temperature°C": response.get('selected_answer'),
-                "Duration": response.get('minutes'),
-                "Start time / end time": get_formatted_start_end_date(response.get('start_time', ''), response.get('end_time', '')),
-                "End temp": response.get('product_temp') or response.get('end_temp_or_storage_temp'),
-                "After 90 min": response.get('end_temp_or_storage_temp'),
-                "Reheating Temp (°C)": response.get('end_temp_or_storage_temp'),
-                "Cooking Completion Temp (°C)": response.get('start_temp') or response.get('selected_answer')
-            }
-            
-            # Only include non-empty values in the response_dict
-            # response_dict = {key: value for key, value in fields.items() if value}
-            
-            response_list[response['response_id']] = fields
+            response_dict = {}
+            if checkpoint_code:
+                if checkpoint_code in checkpoint_code_groups:
+                    table_code = checkpoint_code_groups.get(checkpoint_code) or DEFAULT_CHECKPOINT_CODE
+                    for mapping in table_headers.get(int(table_code)):
+                        for col_name, field_name in mapping.items():
+                            value = response.get(field_name)
+                            response_dict[col_name] = value
+                response_list[response['response_id']] = response_dict
         
         return response_list
 
@@ -268,15 +245,17 @@ class PdfService:
             checkpoint_response['submitted_on'] = " " if submitted_on is None else str(
                 datetime.fromisoformat(submitted_on).date()
             )
-            
+            checkpoint_code = None
             # Update checkpoint response with checkpoint details
             if checkpoint_response['checkpoint_id'] in checkpoint_mappings:
-                checkpoint_response.update(checkpoint_mappings[checkpoint_response['checkpoint_id']])
+                checkpoint_data = checkpoint_mappings[checkpoint_response['checkpoint_id']]
+                checkpoint_code = checkpoint_data['code']
+                checkpoint_response.update(checkpoint_data)
             else:
                 checkpoint_response['checkpoint_response_details'] = ''
             
             # Process responses
-            response_dict = self.process_individual_responses(response_data)
+            response_dict = self.process_individual_responses(checkpoint_code=checkpoint_code, response_data=response_data)
             
             response_list.update(response_dict)
             checkpoint_response['response_details'] = response_list
