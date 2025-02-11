@@ -139,8 +139,8 @@ class PdfService:
                 WHERE cafe_id = '{cafe_id}' 
                 AND area_id = '{area_id}' 
                 AND submitted = true
-                AND created_on >= '{start_date}' AND created_on <= '{end_date}'
-                AND skipped = false 
+                -- AND created_on >= '{start_date}' AND created_on <= '{end_date}'
+                -- AND skipped = false 
             ) t;
             """
         ) or []
@@ -214,14 +214,18 @@ class PdfService:
                 return f"{extract_time_from_timestamp(start_time)} {extract_time_from_timestamp(end_time)}".strip()
             else:
                 None
-        
+
         for [response] in response_data:
             response_dict = {}
             checkpoint_code = checkpoint_code if checkpoint_code in checkpoint_code_groups else DEFAULT_CHECKPOINT_CODE
             table_code = checkpoint_code_groups.get(checkpoint_code)
             for mapping in table_headers.get(int(table_code)):
                 for col_name, field_name in mapping.items():
-                    value = response.get(field_name)
+                    if col_name == 'start_end_time':
+                        start_time, end_time = field_name
+                        value = get_formatted_start_end_date(response.get(start_time), response.get(end_time))
+                    else:
+                        value = response.get(field_name)
                     response_dict[col_name] = value
             response_list[response['response_id']] = response_dict
         
