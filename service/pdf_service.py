@@ -139,8 +139,8 @@ class PdfService:
                 WHERE cafe_id = '{cafe_id}' 
                 AND area_id = '{area_id}' 
                 AND submitted = true
-                -- AND created_on >= '{start_date}' AND created_on <= '{end_date}'
-                -- AND skipped = false 
+                AND created_on >= '{start_date}' AND created_on <= '{end_date}'
+                AND skipped = false 
             ) t;
             """
         ) or []
