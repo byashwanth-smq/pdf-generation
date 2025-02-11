@@ -224,6 +224,15 @@ class PdfService:
                     if col_name == 'start_end_time':
                         start_time, end_time = field_name
                         value = get_formatted_start_end_date(response.get(start_time), response.get(end_time))
+                    elif col_name == 'cooking_completion_temp':
+                        start_temp, selected_answer = field_name
+                        value = response.get(start_temp) or response.get(selected_answer)
+                    elif col_name == 'start_temp':
+                         start_temp, selected_answer = field_name
+                         value = response.get(start_temp) or response.get(selected_answer)
+                    elif col_name == 'end_temp':
+                         end_temp_or_storage_temp, product_temp = field_name
+                         value = response.get(end_temp_or_storage_temp) or response.get(product_temp)
                     else:
                         value = response.get(field_name)
                     response_dict[col_name] = value

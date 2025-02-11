@@ -1,7 +1,7 @@
 checkpoint_code_groups = {
     3: '4', 7: '4',
     0: '5', 15: '5', 19: '5',
-    10: '6', 20: '6', 31: '6', 28: '6', 36: '6',
+    10: '6', 20: '6', 31: '6', 28: '6', 36: '6',  #todo - adjust this 31:6 - its wrong
     2: '7', 17: '7',
     6: '8', 18: '8', 25: '8',
     12: '9', 8: '9', 29: '9', 4: '9',
@@ -25,12 +25,12 @@ table_col = {
     "product_temperature": "product_temp",
     "mog_name": "dynamic_question",
     "unit": "unit",
-    "start_temp": "start_temp",
-    "end_temp": "end_temp_or_storage_temp",
+    "start_temp": ["start_temp", "selected_answer"],
+    "end_temp": ["end_temp_or_storage_temp", "product_temp"],
     "duration": "minutes",
     "sanitizer_concentration": "sanitizer_concentration",
     "start_end_time": ["start_time", "end_time"],
-    "cooking_completion_temp": "start_temp",
+    "cooking_completion_temp": ["start_temp", "selected_answer"],
     "reheating_temp": "end_temp_or_storage_temp"
 }
 
