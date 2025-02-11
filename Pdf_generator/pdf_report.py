@@ -54,6 +54,14 @@ class CheckpointReport:
                     self.pdf_gen.new_page()
                     current_y_position = self.pdf_gen.page_height + 100
 
+            current_y_position -= 25
+            self.add_cafeteria_name(cafe_data["cafeteria_name"], current_y_position - 10)
+
+            for area_name, area_data in cafe_data["Areas"].items():  # Iterate through areas
+                if current_y_position < 150:
+                    self.pdf_gen.new_page()
+                    current_y_position = self.pdf_gen.page_height + 100
+
                 self.add_section_header(area_name, current_y_position - 120)
                 current_y_position -= 30
 
