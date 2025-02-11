@@ -139,7 +139,7 @@ class PdfService:
                 WHERE cafe_id = '{cafe_id}' 
                 AND area_id = '{area_id}' 
                 AND submitted = true
-                AND created_on >= '{start_date}' AND created_on <= '{end_date}'
+                -- AND created_on >= '{start_date}' AND created_on <= '{end_date}'
                 -- AND skipped = false 
             ) t;
             """
@@ -192,24 +192,59 @@ class PdfService:
             SELECT row_to_json(t) 
             FROM (SELECT action_taken, quantity, comment, dynamic_question, 
                          response_id, question_description, question_type, 
-                         sanitizer_concentration, selected_answer, unit
+                         sanitizer_concentration, selected_answer, unit, 
+                         category, product_temp, start_temp, minutes,
+                         end_temp_or_storage_temp, selected_answer,
+                         not_in_service, start_time, end_time
                   FROM {TABLES.RESPONSE.value} 
                   WHERE checkpoint_response_id = '{checkpoint_response_id}') t;
         """
         return self.db_handler.fetch_all_data(query)
+    
 
-    def process_responses(self, checkpoint_response_list: Dict, 
-                         checkpoint_mappings: Dict, users_mappings: Dict) -> Dict:
-        """Process all responses for checkpoint responses.
+
+    def process_individual_responses(self, response_data: List[Dict]) -> Dict:
+        """Processes individual responses and constructs response_dict dynamically."""
+        response_list = {}
         
-        Args:
-            checkpoint_response_list: Dictionary of checkpoint responses
-            checkpoint_mappings: Checkpoint mapping dictionary
-            users_mappings: User mapping dictionary
+        for [response] in response_data:
+            response_dict = {}
             
-        Returns:
-            Dict: Processed responses
-        """
+            # Only add fields if they have truthy values
+            fields = {
+                "Dish name": response.get('dynamic_question'),
+                "Quantity": response.get("quantity"),
+                "Product temperature": response.get('product_temp') or "",
+                "Response": response.get('selected_answer'),
+                "Sanitizer Concentration": response.get("sanitizer_concentration"),
+                "Start temp": response.get('start_temp') or response.get('selected_answer'),
+                "Not in service": response.get('not_in_service'),
+                "MOG-Name": response.get("dynamic_question"),
+                "Sub-Checkpoint": response.get('question_description'),
+                "Comment": response.get("comment"),
+                "Category": response.get('category'),
+                "Action_taken": response.get('action_taken'),
+                "Image": None,
+                "Unit": response.get('unit'),
+                "Equipment Temperature°C": response.get('selected_answer'),
+                "Duration": response.get('minutes'),
+                "Start time / end time": f"{response.get('start_time', '')} {response.get('end_time', '')}".strip(),
+                "End temp": response.get('product_temp') or response.get('end_temp_or_storage_temp'),
+                "After 90 min": response.get('end_temp_or_storage_temp'),
+                "Reheating Temp (°C)": response.get('end_temp_or_storage_temp'),
+                "Cooking Completion Temp (°C)": response.get('start_temp') or response.get('selected_answer')
+            }
+            
+            # Only include non-empty values in the response_dict
+            response_dict = {key: value for key, value in fields.items() if value}
+            
+            response_list[response['response_id']] = response_dict
+        
+        return response_list
+
+
+    def process_responses(self, checkpoint_response_list: Dict, checkpoint_mappings: Dict, users_mappings: Dict) -> Dict:
+        """Process all responses for checkpoint responses."""
         response_list = {}
         
         for checkpoint_response in checkpoint_response_list.values():
@@ -232,31 +267,9 @@ class PdfService:
                 checkpoint_response['checkpoint_response_details'] = ''
             
             # Process responses
-            for [response] in response_data:
-                response_list[response['response_id']] = { #todo - getting issue commented it
-                    "Dish name" : response['dynamic_question'],
-                    "Quantity": response["quantity"],
-                    # "Product temperature": response['product_temp'] if response['product_temp'] else "",
-                    "Response": response['selected_answer'],
-                    "Sanitizer Concentration": response["sanitizer_concentration"],
-                    # "Start temp": response['start_temp'] if response['start_temp'] else response['selected_answer'],
-                    # "Not in service": response['not_in_service'],
-                    "MOG-Name":response["dynamic_question"],
-                    "Sub-Checkpoint": response['question_description'],
-                    "Comment": response["comment"],
-                    # "Category": response['category'],
-                    "Action_taken": response['action_taken'],
-                    "Image": None,
-                    "Unit": response['unit'],
-                    "Equipment Temperature°C": response['selected_answer'],
-                    # "Duration": response['minutes'],
-                    # "Start time / end time": response['start_time'] + ' ' + response['end_time'] ,
-                    # "End temp": response['product_temp'] if response['product_temp'] else response['end_temp_or_storage_temp'],
-                    # "After 90 min": response['end_temp_or_storage_temp'],
-                    # "Reheating Temp (°C)": response['end_temp_or_storage_temp'],
-                    # "Cooking Completion Temp (°C)": response['start_temp'] if response['start_temp'] else response['selected_answer']
-                }
+            response_dict = self.process_individual_responses(response_data)
             
+            response_list.update(response_dict)
             checkpoint_response['response_details'] = response_list
         
         return response_list
