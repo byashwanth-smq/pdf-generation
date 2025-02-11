@@ -8,7 +8,8 @@
         "8":  [120, 60, 40, 70, 80, 60, 50, 50],
         "9":  [70, 40, 40, 50, 140, 60, 50, 50, 80],
         "10": [70, 30, 30, 50, 80, 80, 50, 50, 50, 60],
-        "11": [50, 30, 50, 50, 60, 60, 50, 50, 50, 50, 40]
+        "11": [50, 30, 50, 50, 60, 60, 50, 50, 50, 50, 40],
+        "12": [250, 100, 60, 80, 90, 140, 50, 30, 40, 70, 80, 60]
     },
     "table_headers": {
         "3":  ["Sub-Checkpoint", "Response", "Image"],
@@ -19,6 +20,14 @@
         "8":  ["MOG-Name", "Quantity", "Unit", "Start Temp", "End Temp", "Comment", "Action Taken", "Image"],
         "9":  ["MOG-Name", "Unit", "Duration", "Sanitizer Concentration", "Sub-Checkpoint", "Response", "Comment", "Action Taken", "Image"],
         "10": ["MOG-Name", "Quantity", "Unit", "Duration", "Sanitizer Concentration", "Sub-Checkpoint", "Response", "Comment", "Action Taken", "Image"],
-        "11": ["Dish-Name", "Qty (in kg)", "Start/End Time", "Category", "Cooking Completion Temp (°C)", "Reheating Temp (°C)", "Question", "Response", "Comment", "Action Taken", "Image"]
+        "11": ["Dish-Name", "Qty (in kg)", "Start/End Time", "Category", "Cooking Completion Temp (°C)", "Reheating Temp (°C)", "Question", "Response", "Comment", "Action Taken", "Image"],
+        "12": [
+            "Sub-Checkpoint", "Response", "Image", "Quantity(in kgs)", "Comment", 
+            "Action Taken", "Question", "Dish Name", "Category", "After 90 min", 
+            "Not in Service", "Equipment Temperature°C", "Product Temperature°C",
+            "MOG-Name", "Unit", "Start Temp", "End Temp", "Duration", 
+            "Sanitizer Concentration", "Qty (in kg)", "Start/End Time", 
+            "Cooking Completion Temp (°C)", "Reheating Temp (°C)"
+        ]
     }
 }
