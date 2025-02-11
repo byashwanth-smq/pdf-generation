@@ -16,8 +16,31 @@ class TableGenerator:
         
         with open(file_path, "r") as json_file:
             table_conf = json.load(json_file)
-    
-        table_code = table_data["code"]
+        table_code = ""
+        json_table_code = table_data["code"]
+        print(json_table_code)
+        
+        if json_table_code is not None:
+            code_groups = table_conf.get("code_groups")
+            if code_groups:
+                try:
+                    table_code_int = int(json_table_code)
+                    found = False
+                    for key, values in code_groups.items():
+                        if table_code_int in values:
+                            table_code = str(key)
+                            # print(key)  # Print only the key
+                            found = True
+                            
+                    if not found:
+                        print(f"Value {json_table_code} not found in any code group.")
+                except ValueError:
+                    print(f"Invalid table_code: {json_table_code}. Cannot convert to integer.")
+            else:
+                print("code_groups key not found or empty in final_json")
+        else:
+            print("No 'code' key found in table_data.")
+            
         # Accessing the column widths using the table_code
         column_widths = table_conf["table_column_widths"][str(table_code)]
 
@@ -33,9 +56,17 @@ class TableGenerator:
         self.pdf.setFillColor((0, 0, 0))
 
         general_cleaning_name = table_data["General_Cleaning_name"]  # Access directly
+        if general_cleaning_name is None:
+            general_cleaning_name = ""  # Or a default string value
         receiving_text = table_data["Receiving_text"]  # Access directly
+        if receiving_text is None:
+            receiving_text = ""  # Or a default string value
         submitted_on = table_data["submitted_on"]  # Access directly
+        if submitted_on is None:
+            submitted_on = ""  # Or a default string value
         submitted_by = table_data["submitted_by"]  # Access directly
+        if submitted_by is None:
+            submitted_by = ""  # Or a default string value
 
         self.pdf.drawString(32, y_position - 20, f"General Cleaning: {general_cleaning_name}")
         self.pdf.setFont("Helvetica", 10)
