@@ -206,10 +206,19 @@ class PdfService:
     def process_individual_responses(self, response_data: List[Dict]) -> Dict:
         """Processes individual responses and constructs response_dict dynamically."""
         response_list = {}
+
+        def extract_time_from_timestamp(timestamp):
+            if timestamp:
+                return datetime.fromisoformat(timestamp[:-6]).strftime("%H:%M:%S")
+
+        def get_formatted_start_end_date(start_time, end_time):
+            if start_time or end_time:
+                return f"{extract_time_from_timestamp(start_time)} {extract_time_from_timestamp(end_time)}".strip()
+            else:
+                None
         
         for [response] in response_data:
             response_dict = {}
-            
             # Only add fields if they have truthy values
             fields = {
                 "Dish name": response.get('dynamic_question'),
@@ -228,7 +237,7 @@ class PdfService:
                 "Unit": response.get('unit'),
                 "Equipment Temperature°C": response.get('selected_answer'),
                 "Duration": response.get('minutes'),
-                "Start time / end time": f"{response.get('start_time', '')} {response.get('end_time', '')}".strip(),
+                "Start time / end time": get_formatted_start_end_date(response.get('start_time', ''), response.get('end_time', '')),
                 "End temp": response.get('product_temp') or response.get('end_temp_or_storage_temp'),
                 "After 90 min": response.get('end_temp_or_storage_temp'),
                 "Reheating Temp (°C)": response.get('end_temp_or_storage_temp'),
