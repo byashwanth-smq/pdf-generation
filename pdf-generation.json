@@ -1,0 +1,209 @@
+{
+    "Site Name": "Intel",
+    "Site ID": "137Y",
+    "Report Date": "2024-11-11",
+    "Verified By": "Test",
+    "cafes": {
+        "106X": {
+            "cafe_id": "00000000-0000-4000-8044-00000000000f",
+            "cafeteria_name": "Intel",
+            "cafe_code": "106X",
+            "Areas": {
+                "Staff Grooming": {
+                    "response_details": {}
+                },
+                "Pest Sighting": {
+                    "response_details": {}
+                },
+                "Service": {
+                    "response_details": {}
+                },
+                "Healthcare": {
+                    "response_details": {}
+                },
+                "Pantry": {
+                    "response_details": {}
+                },
+                "Kitchen": {
+                    "00000000-0000-4000-80d4-00001d8b32d9": {
+                        "checkpoint_response_id": "00000000-0000-4000-80d4-00001d8b32d9",
+                        "checkpoint_id": "00000000-0000-4000-80b7-000000000006",
+                        "submitted_by": " ",
+                        "submitted_on": " ",
+                        "General_Cleaning_name": "General Cleaning - Kitchen",
+                        "code": 0,
+                        "Receiving_text": "HSEQ-FS/F/SOP-34",
+                        "response_details": {
+                            "00000000-0000-4000-803a-000000534700": {
+                                "Quantity": 5.0,
+                                "response": null,
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": "Beetroot Rice Premium",
+                                "question": "Is following procedure compliant?",
+                                "comment": "Testing ",
+                                "action_taken": "Testing ",
+                                "image": null,
+                                "unit": "Kgs"
+                            },
+                            "00000000-0000-4000-803a-000000534ad0": {
+                                "Quantity": null,
+                                "response": "Breakfast",
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": null,
+                                "question": "Select Mealtime",
+                                "comment": null,
+                                "action_taken": null,
+                                "image": null,
+                                "unit": null
+                            },
+                            "00000000-0000-4000-803a-000000534c83": {
+                                "Quantity": null,
+                                "response": "Q46y",
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": null,
+                                "question": "Cart no",
+                                "comment": null,
+                                "action_taken": null,
+                                "image": null,
+                                "unit": null
+                            }
+                        }
+                    },
+                    "00000000-0000-4000-80d4-00001d8b3367": {
+                        "checkpoint_response_id": "00000000-0000-4000-80d4-00001d8b3367",
+                        "checkpoint_id": "00000000-0000-4000-80b7-000000000013",
+                        "submitted_by": " ",
+                        "submitted_on": " ",
+                        "General_Cleaning_name": "Equipment Temperature Record",
+                        "code": 17,
+                        "Receiving_text": "HSEQ-FS/F/SOP -13",
+                        "response_details": {
+                            "00000000-0000-4000-803a-000000534700": {
+                                "Quantity": 5.0,
+                                "response": null,
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": "Beetroot Rice Premium",
+                                "question": "Is following procedure compliant?",
+                                "comment": "Testing ",
+                                "action_taken": "Testing ",
+                                "image": null,
+                                "unit": "Kgs"
+                            },
+                            "00000000-0000-4000-803a-000000534ad0": {
+                                "Quantity": null,
+                                "response": "Breakfast",
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": null,
+                                "question": "Select Mealtime",
+                                "comment": null,
+                                "action_taken": null,
+                                "image": null,
+                                "unit": null
+                            },
+                            "00000000-0000-4000-803a-000000534c83": {
+                                "Quantity": null,
+                                "response": "Q46y",
+                                "Sanitizer Concentration": null,
+                                "MOG-Name": null,
+                                "question": "Cart no",
+                                "comment": null,
+                                "action_taken": null,
+                                "image": null,
+                                "unit": null
+                            }
+                        }
+                    },
+                    "response_details": {
+                        "00000000-0000-4000-803a-000000534700": {
+                            "Quantity": 5.0,
+                            "response": null,
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": "Beetroot Rice Premium",
+                            "question": "Is following procedure compliant?",
+                            "comment": "Testing ",
+                            "action_taken": "Testing ",
+                            "image": null,
+                            "unit": "Kgs"
+                        },
+                        "00000000-0000-4000-803a-000000534ad0": {
+                            "Quantity": null,
+                            "response": "Breakfast",
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": null,
+                            "question": "Select Mealtime",
+                            "comment": null,
+                            "action_taken": null,
+                            "image": null,
+                            "unit": null
+                        },
+                        "00000000-0000-4000-803a-000000534c83": {
+                            "Quantity": null,
+                            "response": "Q46y",
+                            "Sanitizer Concentration": null,
+                            "MOG-Name": null,
+                            "question": "Cart no",
+                            "comment": null,
+                            "action_taken": null,
+                            "image": null,
+                            "unit": null
+                        }
+                    }
+                },
+                "Dispatch": {
+                    "response_details": {}
+                },
+                "Food Waste": {
+                    "response_details": {}
+                }
+            }
+        },
+        "106X_SSR2": {
+            "cafe_id": "00000000-0000-4000-8044-00000003531b",
+            "cafeteria_name": "Intel SRR2",
+            "cafe_code": "106X_SSR2",
+            "Areas": {
+                "Kitchen": {
+                    "response_details": {}
+                },
+                "Receiving & Stores": {
+                    "response_details": {}
+                }
+            }
+        },
+        "106X_SSR3": {
+            "cafe_id": "00000000-0000-4000-8044-0000000353e6",
+            "cafeteria_name": "Intel SRR3",
+            "cafe_code": "106X_SSR3",
+            "Areas": {
+                "Kitchen": {
+                    "response_details": {}
+                },
+                "Receiving & Stores": {
+                    "response_details": {}
+                }
+            }
+        },
+        "106X_SSRK": {
+            "cafe_id": "00000000-0000-4000-8044-00000003546c",
+            "cafeteria_name": "Intel SRRK",
+            "cafe_code": "106X_SSRK",
+            "Areas": {
+                "Pantry": {
+                    "response_details": {}
+                },
+                "Service": {
+                    "response_details": {}
+                },
+                "Food Waste": {
+                    "response_details": {}
+                }
+            }
+        },
+        "106X_SSR1": {
+            "cafe_id": "00000000-0000-4000-8044-000000035284",
+            "cafeteria_name": "Intel SRR1",
+            "cafe_code": "106X_SSR1",
+            "Areas": {}
+        }
+    }
+}

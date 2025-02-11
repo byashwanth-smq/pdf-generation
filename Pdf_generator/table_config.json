@@ -1,0 +1,47 @@
+{   
+
+    "code_groups" :{
+        
+        "3": [],
+        "4": [3,7],
+        "5": [0,15,19],
+        "6": [10,20,31,28,36],
+        "7": [2,17],
+        "8": [6,18,25],
+        "9": [ 12,8,29,4],
+        "10": [1,22],
+        "11": [9,23]
+    },
+
+    "table_column_widths": {
+        "3":  [250, 100, 60],
+        "4":  [200, 100, 80, 80],
+        "5":  [250, 60, 60, 90, 100],
+        "6":  [100, 60, 140, 90, 90, 60],
+        "7":  [100, 60, 80, 90, 90, 60, 50],
+        "8":  [120, 60, 40, 70, 80, 60, 50, 50],
+        "9":  [70, 40, 40, 50, 140, 60, 50, 50, 80],
+        "10": [70, 30, 30, 50, 80, 80, 50, 50, 50, 60],
+        "11": [50, 30, 50, 50, 60, 60, 50, 50, 50, 50, 40],
+        "12": [250, 100, 60, 80, 90, 140, 50, 30, 40, 70, 80, 60]
+    },
+    "table_headers": {
+        "3":  ["Sub-Checkpoint", "Response", "Image"],
+        "4":  ["Sub-Checkpoint", "Quantity(in kgs)", "Comment", "Image"],
+        "5":  ["Question", "Response", "Comment", "Action Taken", "Image"],
+        "6":  ["Dish Name", "Category", "Question", "Response", "After 90 min", "Comment"],
+        "7":  ["Question", "Not in Service", "Equipment Temperature°C", "Product Temperature°C", "Comment", "Action Taken", "Image"],
+        "8":  ["MOG-Name", "Quantity", "Unit", "Start Temp", "End Temp", "Comment", "Action Taken", "Image"],
+        "9":  ["MOG-Name", "Unit", "Duration", "Sanitizer Concentration", "Sub-Checkpoint", "Response", "Comment", "Action Taken", "Image"],
+        "10": ["MOG-Name", "Quantity", "Unit", "Duration", "Sanitizer Concentration", "Sub-Checkpoint", "Response", "Comment", "Action Taken", "Image"],
+        "11": ["Dish-Name", "Qty (in kg)", "Start/End Time", "Category", "Cooking Completion Temp (°C)", "Reheating Temp (°C)", "Question", "Response", "Comment", "Action Taken", "Image"],
+        "12": [
+            "Sub-Checkpoint", "Response", "Image", "Quantity(in kgs)", "Comment", 
+            "Action Taken", "Question", "Dish Name", "Category", "After 90 min", 
+            "Not in Service", "Equipment Temperature°C", "Product Temperature°C",
+            "MOG-Name", "Unit", "Start Temp", "End Temp", "Duration", 
+            "Sanitizer Concentration", "Qty (in kg)", "Start/End Time", 
+            "Cooking Completion Temp (°C)", "Reheating Temp (°C)"
+        ]
+    }
+}
