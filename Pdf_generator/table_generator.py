@@ -33,6 +33,7 @@ class TableGenerator:
                             found = True
                             
                     if not found:
+                        table_code = 5
                         print(f"Value {json_table_code} not found in any code group.")
                 except ValueError:
                     print(f"Invalid table_code: {json_table_code}. Cannot convert to integer.")
@@ -54,8 +55,7 @@ class TableGenerator:
         self.pdf.setFillColor((0.8, 0.9, 1))
         self.pdf.rect(28, y_position - 40, self.page_width - 60, 40, fill=1, stroke=0)
         self.pdf.setFillColor((0, 0, 0))
-
-        general_cleaning_name = table_data["General_Cleaning_name"]  # Access directly
+        general_cleaning_name = table_data["checkpoint_name"]  # Access directly
         if general_cleaning_name is None:
             general_cleaning_name = ""  # Or a default string value
         receiving_text = table_data["Receiving_text"]  # Access directly
@@ -113,7 +113,7 @@ class TableGenerator:
 
             for i, key in enumerate(headers):
                 text = str(row.get(key.lower(), row.get(key, "")))  # Case-insensitive key lookup
-                wrapped_text = wrap(text, width=int(column_widths[i] // 7))
+                wrapped_text = wrap(text or " --- ", width=int(column_widths[i] // 7))
 
                 for j, line in enumerate(wrapped_text):
                     self.pdf.setFont("Helvetica", 10)
