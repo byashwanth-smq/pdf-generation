@@ -207,7 +207,7 @@ class PdfService:
         DEFAULT_CHECKPOINT_CODE = 100
         def extract_time_from_timestamp(timestamp):
             if timestamp:
-                return datetime.fromisoformat(timestamp[:-6]).strftime("%H:%M:%S")
+                return datetime.fromisoformat(timestamp[:-6]).strftime("%I:%M:%S %p")
 
         def get_formatted_start_end_date(start_time, end_time):
             if start_time or end_time:
